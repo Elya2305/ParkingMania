@@ -32,7 +32,7 @@ public class ParkingMania {
         }
 
         public static EnvType getEnvironment(String hostName) {
-            return hash.getOrDefault(hostName, SERVER);
+            return hash.getOrDefault(hostName, LOCAL);
         }
 
     }
