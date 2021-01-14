@@ -1,4 +1,4 @@
-package com.outofmemory.controller;
+package com.outofmemory.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
