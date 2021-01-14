@@ -1,7 +1,8 @@
 package com.outofmemory.service;
 
 import com.outofmemory.dto.ComplainDto;
+import com.outofmemory.entity.ComplainInfo;
 
 public interface ComplainService {
-    boolean addComplaining(ComplainDto dto);
+    ComplainInfo validateAndGetComplaint(ComplainDto dto);
 }

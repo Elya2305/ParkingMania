@@ -21,4 +21,8 @@ public class User {
     public enum Role {
         USER, ADMIN
     }
+
+    public void addComplain(ComplainInfo info) {
+        this.complaints.add(info);
+    }
 }
