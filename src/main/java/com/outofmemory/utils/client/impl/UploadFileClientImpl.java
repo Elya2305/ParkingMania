@@ -5,26 +5,39 @@ import com.cloudinary.utils.ObjectUtils;
 import com.outofmemory.dto.FileDto;
 import com.outofmemory.utils.client.UploadFileClient;
 import com.outofmemory.utils.converer.FileConverter;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Map;
+
+/**
+*
+* class in Java 4 style (this library works without generics)
+* */
 
 @Component
 @Log4j2
-@AllArgsConstructor
 public class UploadFileClientImpl implements UploadFileClient {
     private final FileConverter fileConverter;
+    @Value("${cloud.name}")
+    private String CLOUD_NAME;
+    @Value("${api.key}")
+    private String API_KEY;
+    @Value("${api.secret}")
+    private String API_SECRET;
+
+    public UploadFileClientImpl(FileConverter fileConverter) {
+        this.fileConverter = fileConverter;
+    }
 
     public FileDto uploadFile(MultipartFile file) {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "dxxw3k4oc",
-                "api_key", "293951996457269",
-                "api_secret", "eGkH49mSbH8jOELJX8UqMzYUgfE"));
+                "cloud_name", CLOUD_NAME,
+                "api_key", API_KEY,
+                "api_secret", API_SECRET));
         Map params = ObjectUtils.asMap(
                 "overwrite", true,
                 "resource_type", "image"

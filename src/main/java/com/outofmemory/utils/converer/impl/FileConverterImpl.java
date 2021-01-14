@@ -26,8 +26,8 @@ public class FileConverterImpl implements FileConverter {
             fos.close();
             return convFile;
         } catch (IOException e) {
-            log.error("AAAAA", e);
-            throw new UploadFileException();
+            log.error("Error while converting file", e);
+            throw new UploadFileException("Sorry, we can't upload this file");
         }
     }
 }
