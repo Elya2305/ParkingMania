@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
 *
-* class in Java 4 style (this library works without generics)
+* class in Java 4 style
 * */
 
 // todo refactor

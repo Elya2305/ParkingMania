@@ -1,6 +1,5 @@
 package com.outofmemory.service;
 
-import com.outofmemory.dto.user.LoginPasswordDto;
 import com.outofmemory.dto.user.auth.RegRequestDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 

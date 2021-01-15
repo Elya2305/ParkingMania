@@ -57,7 +57,7 @@ public class SecurityConfig {
                     .csrf().disable();
             http.cors().and()
                     .authorizeRequests()
-                    .antMatchers("/user/login", "/user/registration**").permitAll()
+                    .antMatchers("/user/login", "/user/register").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .formLogin()
