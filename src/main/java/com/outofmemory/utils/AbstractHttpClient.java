@@ -37,12 +37,12 @@ public abstract class AbstractHttpClient implements RestHttpClient {
     }
 
     @Override
-    public <T> T post(String url, Class<T> response) {
+    public <T, R> T post(String url, R request, Class<T> response) {
         try {
             log.info("Post to {}", url);
-            HttpEntity<T> request = new HttpEntity<>(headers());
-            return restTemplate.exchange(url, HttpMethod.POST, request, response).getBody();
-        }catch (RuntimeException e) {
+            HttpEntity<R> requestEntity = new HttpEntity<>(request, headers());
+            return restTemplate.exchange(url, HttpMethod.POST, requestEntity, response).getBody();
+        } catch (RuntimeException e) {
             log.error("Error while processing post request");
             throw e;
         }

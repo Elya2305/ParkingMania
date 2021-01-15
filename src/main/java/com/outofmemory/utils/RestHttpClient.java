@@ -5,5 +5,5 @@ public interface RestHttpClient {
 
     <T> T get(String url, Class<T> response);
 
-    <T> T post(String url, Class<T> response);
+    <T, R> T post(String url, R request, Class<T> response);
 }

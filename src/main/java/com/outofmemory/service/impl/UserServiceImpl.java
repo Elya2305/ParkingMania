@@ -1,9 +1,13 @@
 package com.outofmemory.service.impl;
 
-import com.outofmemory.dto.user.UserRegDto;
+import com.outofmemory.dto.user.LoginPasswordDto;
+import com.outofmemory.dto.user.auth.LoginRequestDto;
+import com.outofmemory.dto.user.auth.RegRequestDto;
+import com.outofmemory.dto.user.auth.RegResponseDto;
 import com.outofmemory.entity.User;
 import com.outofmemory.repository.UserRepository;
 import com.outofmemory.service.UserService;
+import com.outofmemory.utils.client.FirebaseAuthClient;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,11 +18,10 @@ import java.util.NoSuchElementException;
 @Service(value = UserServiceImpl.NAME)
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
     public final static String NAME = "UserService";
+    private final UserRepository userRepository;
+    private final FirebaseAuthClient authClient;
 
-
-    // todo check
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserDetails userDetails = userRepository.findByEmail(email);
@@ -30,7 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean register(UserRegDto dto) {
+    public boolean register(RegRequestDto dto) {
+        RegResponseDto response = authClient.register(RegRequestDto.of(dto.getEmail(), dto.getPassword()));
         return false;
     }
 

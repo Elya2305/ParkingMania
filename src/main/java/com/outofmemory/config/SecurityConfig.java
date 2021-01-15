@@ -57,11 +57,11 @@ public class SecurityConfig {
                     .csrf().disable();
             http.cors().and()
                     .authorizeRequests()
-                    .antMatchers("/login", "/registration**").permitAll()
+                    .antMatchers("/user/login", "/user/registration**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .formLogin()
-                    .loginPage("/login")
+                    .loginPage("/user/login")
                     .usernameParameter("email")
                     .permitAll();
         }

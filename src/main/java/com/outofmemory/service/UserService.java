@@ -1,8 +1,9 @@
 package com.outofmemory.service;
 
-import com.outofmemory.dto.user.UserRegDto;
+import com.outofmemory.dto.user.LoginPasswordDto;
+import com.outofmemory.dto.user.auth.RegRequestDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
-    boolean register(UserRegDto dto);
+    boolean register(RegRequestDto dto);
 }
