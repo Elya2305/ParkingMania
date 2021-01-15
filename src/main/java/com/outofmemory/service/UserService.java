@@ -1,7 +1,7 @@
 package com.outofmemory.service;
 
-import com.outofmemory.dto.ComplainDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
-    boolean addComplaining(ComplainDto dto);
+public interface UserService extends UserDetailsService {
+
 }

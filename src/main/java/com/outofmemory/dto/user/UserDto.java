@@ -1,4 +1,4 @@
-package com.outofmemory.dto;
+package com.outofmemory.dto.user;
 
 import lombok.Data;
 

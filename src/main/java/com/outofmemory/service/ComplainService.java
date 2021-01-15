@@ -1,8 +1,11 @@
 package com.outofmemory.service;
 
 import com.outofmemory.dto.ComplainDto;
-import com.outofmemory.entity.ComplainInfo;
+
+import java.util.List;
 
 public interface ComplainService {
-    ComplainInfo validateAndGetComplaint(ComplainDto dto);
+    boolean add(ComplainDto dto);
+
+    List<ComplainDto> all();
 }
