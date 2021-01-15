@@ -4,6 +4,7 @@ import com.outofmemory.dto.user.auth.LoginRequestDto;
 import com.outofmemory.dto.user.auth.LoginResponseDto;
 import com.outofmemory.dto.user.auth.RegRequestDto;
 import com.outofmemory.dto.user.auth.RegResponseDto;
+import com.outofmemory.excetion.auth.LoginException;
 import com.outofmemory.excetion.auth.RegistrationException;
 import com.outofmemory.utils.AbstractHttpClient;
 import com.outofmemory.utils.client.FirebaseAuthClient;
@@ -41,7 +42,7 @@ public class FirebaseAuthClientImpl extends AbstractHttpClient implements Fireba
        try {
            return post(url(LOGIN_URL), request, LoginResponseDto.class);
        } catch (HttpClientErrorException exp) {
-           throw new RegistrationException(messageExtractor.extractLoginErrorMessage(exp.getMessage()));
+           throw new LoginException(messageExtractor.extractLoginErrorMessage(exp.getMessage()));
        }
     }
 

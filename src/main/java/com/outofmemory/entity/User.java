@@ -15,10 +15,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    private String uuid;
+    private String idToken;
     private String username;
     private String email;
-    private String password;
+    private String localId;
     @OneToMany
     private List<ComplainInfo> complaints;
     @Enumerated(EnumType.STRING)
@@ -31,9 +31,10 @@ public class User implements UserDetails {
         return null;
     }
 
+    // todo
     @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
     @Override

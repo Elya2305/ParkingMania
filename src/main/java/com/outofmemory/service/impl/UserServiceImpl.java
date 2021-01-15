@@ -1,11 +1,11 @@
 package com.outofmemory.service.impl;
 
 import com.outofmemory.dto.user.LoginPasswordDto;
-import com.outofmemory.dto.user.auth.LoginRequestDto;
-import com.outofmemory.dto.user.auth.RegRequestDto;
-import com.outofmemory.dto.user.auth.RegResponseDto;
+import com.outofmemory.dto.user.auth.*;
 import com.outofmemory.entity.User;
+import com.outofmemory.excetion.auth.LoginException;
 import com.outofmemory.repository.UserRepository;
+import com.outofmemory.service.UserMapper;
 import com.outofmemory.service.UserService;
 import com.outofmemory.utils.client.FirebaseAuthClient;
 import lombok.AllArgsConstructor;
@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
     public final static String NAME = "UserService";
     private final UserRepository userRepository;
     private final FirebaseAuthClient authClient;
+    private final UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -33,13 +34,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean register(RegRequestDto dto) {
+    public TokenDto register(RegRequestDto dto) {
         RegResponseDto response = authClient.register(RegRequestDto.of(dto.getEmail(), dto.getPassword()));
-        return false;
+        User user = userMapper.map(response);
+        userRepository.save(user);
+        return TokenDto.of(response.getIdToken());
     }
 
-    private User getFromDb(String uuid) {
-        return userRepository.findByUuid(uuid).orElseThrow(() ->
-                new NoSuchElementException("Can't find user with uuid " + uuid));
+    @Override
+    public TokenDto login(LoginRequestDto dto) {
+        LoginResponseDto response = authClient.login(dto);
+        validateLogin(response);
+        return TokenDto.of(response.getIdToken());
+    }
+
+    private void validateLogin(LoginResponseDto response) {
+        if (!userRepository.existsByIdToken(response.getIdToken())) {
+            throw new LoginException("User don't present in db");
+        }
+    }
+
+    private User getFromDb(String idToken) {
+        return userRepository.findByIdToken(idToken).orElseThrow(() ->
+                new NoSuchElementException("Can't find user with idToken " + idToken));
     }
 }

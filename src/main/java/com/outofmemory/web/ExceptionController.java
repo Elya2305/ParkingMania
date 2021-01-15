@@ -2,6 +2,7 @@ package com.outofmemory.web;
 
 import com.outofmemory.excetion.UploadFileException;
 import com.outofmemory.excetion.ValidationException;
+import com.outofmemory.excetion.auth.LoginException;
 import com.outofmemory.excetion.auth.RegistrationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +34,12 @@ public class ExceptionController {
 
     @ExceptionHandler(RegistrationException.class)
     public String handleRegistrationException(RegistrationException ex) {
+        log.error("Was caught exception!", ex);
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(LoginException.class)
+    public String handleLoginException(LoginException ex) {
         log.error("Was caught exception!", ex);
         return ex.getMessage();
     }
