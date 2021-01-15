@@ -1,24 +1,22 @@
 package com.outofmemory.service.impl;
 
+import com.outofmemory.dto.user.UserRegDto;
 import com.outofmemory.entity.User;
 import com.outofmemory.repository.UserRepository;
-import com.outofmemory.service.ComplainService;
 import com.outofmemory.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
-@Service
+@Service(value = UserServiceImpl.NAME)
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    public final static String NAME = "UserService";
+
 
     // todo check
     @Override
@@ -29,6 +27,11 @@ public class UserServiceImpl implements UserService {
 
         return new org.springframework.security.core.userdetails.User(userDetails.getUsername(),
                 userDetails.getPassword(), userDetails.getAuthorities());
+    }
+
+    @Override
+    public boolean register(UserRegDto dto) {
+        return false;
     }
 
     private User getFromDb(String uuid) {

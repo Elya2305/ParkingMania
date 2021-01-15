@@ -1,7 +1,9 @@
 package com.outofmemory.config.firebase;
 
 import com.outofmemory.excetion.auth.FirebaseUserNotExistsException;
+import com.outofmemory.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class FirebaseAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
-//	@Qualifier(value = UserServiceImpl.NAME)
+	@Qualifier(value = UserServiceImpl.NAME)
 	private UserDetailsService userService;
 
 	public boolean supports(Class<?> authentication) {
