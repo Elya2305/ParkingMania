@@ -15,12 +15,14 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 
+@EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
@@ -55,24 +57,29 @@ public class SecurityConfig {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.addFilterBefore(tokenAuthorizationFilter(), BasicAuthenticationFilter.class)
-                .csrf().disable();
-            http.cors().and()
+            http.cors()
+                    .and()
+                    .httpBasic().disable()
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
                     .authorizeRequests()
                     .antMatchers("/user/login", "/user/register").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .formLogin()
                     .loginPage("/user/login")
-                    .usernameParameter("email")
-                    .permitAll();
+                    .usernameParameter("localId")
+                    .permitAll()
+                    .and()
+                    .addFilterBefore(tokenAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         }
     }
 
     private FirebaseService firebaseService;
 
 
-    private FirebaseFilter tokenAuthorizationFilter() {
+    private FirebaseFilter tokenAuthFilter() {
         return new FirebaseFilter(firebaseService);
     }
 

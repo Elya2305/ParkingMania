@@ -20,7 +20,7 @@ public abstract class AbstractHttpClient implements RestHttpClient {
             HttpEntity<String> request = new HttpEntity<>(headers());
             return restTemplate.exchange(url, HttpMethod.GET, request, String.class).getBody();
         } catch (RuntimeException e) {
-            log.error("Error while processing get request");
+            log.error("Error while processing get request", e);
             throw e;
         }
     }
@@ -32,7 +32,7 @@ public abstract class AbstractHttpClient implements RestHttpClient {
             HttpEntity<T> request = new HttpEntity<>(headers());
             return restTemplate.exchange(url, HttpMethod.GET, request, response).getBody();
         } catch (RuntimeException e) {
-            log.error("Error while processing get request");
+            log.error("Error while processing get request", e);
             throw e;
         }
     }
@@ -44,7 +44,7 @@ public abstract class AbstractHttpClient implements RestHttpClient {
             HttpEntity<R> requestEntity = new HttpEntity<>(request, headers());
             return restTemplate.exchange(url, HttpMethod.POST, requestEntity, response).getBody();
         } catch (RuntimeException e) {
-            log.error("Error while processing post request");
+            log.error("Error while processing post request", e);
             throw e;
         }
     }

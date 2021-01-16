@@ -9,12 +9,14 @@ import com.outofmemory.excetion.auth.RegistrationException;
 import com.outofmemory.utils.AbstractHttpClient;
 import com.outofmemory.utils.client.FirebaseAuthClient;
 import com.outofmemory.utils.helper.MessageExtractor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @Service
 public class FirebaseAuthClientImpl extends AbstractHttpClient implements FirebaseAuthClient {
     @Value("${firebase.api.key}")
