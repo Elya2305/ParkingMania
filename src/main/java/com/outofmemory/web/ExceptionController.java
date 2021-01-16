@@ -5,11 +5,12 @@ import com.outofmemory.excetion.ValidationException;
 import com.outofmemory.excetion.auth.LoginException;
 import com.outofmemory.excetion.auth.RegistrationException;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
-@Log4j2
 public class ExceptionController {
     private static final String SOMETHING_WENT_WRONG = "Something went wrong";
 

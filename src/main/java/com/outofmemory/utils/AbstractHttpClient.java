@@ -2,13 +2,14 @@ package com.outofmemory.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
 @AllArgsConstructor
-@Log4j2
+@Slf4j
 public abstract class AbstractHttpClient implements RestHttpClient {
     private final RestTemplate restTemplate;
 

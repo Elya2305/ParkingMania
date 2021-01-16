@@ -3,6 +3,7 @@ package com.outofmemory.utils.converer.impl;
 import com.outofmemory.excetion.UploadFileException;
 import com.outofmemory.utils.converer.FileConverter;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Component
-@Log4j2
+@Slf4j
 public class FileConverterImpl implements FileConverter {
     @Override
     public File convert(MultipartFile file) {

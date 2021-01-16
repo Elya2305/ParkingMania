@@ -10,7 +10,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public User map(RegResponseDto source) {
         User destination = new User();
-        destination.setIdToken(source.getIdToken());
+        destination.setLocalId(source.getLocalId());
         destination.setEmail(source.getEmail());
         destination.setRole(User.Role.USER);
         destination.setStatus(User.Status.ACTIVE);

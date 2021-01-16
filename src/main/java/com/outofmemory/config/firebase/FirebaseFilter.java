@@ -3,13 +3,17 @@ package com.outofmemory.config.firebase;
 import com.cloudinary.utils.StringUtils;
 import com.outofmemory.excetion.auth.FirebaseTokenInvalidException;
 import com.outofmemory.service.FirebaseService;
+import org.springframework.core.Ordered;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,6 +28,7 @@ public class FirebaseFilter extends OncePerRequestFilter {
 		this.firebaseService = firebaseService;
 	}
 
+	// todo fix recursion
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -38,7 +43,7 @@ public class FirebaseFilter extends OncePerRequestFilter {
 				String userName = holder.getUid();
 
 				Authentication auth = new FirebaseAuthenticationToken(userName, holder);
-				SecurityContextHolder.getContext().setAuthentication(auth); // make context of app by token
+				SecurityContextHolder.getContext().setAuthentication(auth);
 
 				filterChain.doFilter(request, response);
 			} catch (FirebaseTokenInvalidException e) {
@@ -46,5 +51,4 @@ public class FirebaseFilter extends OncePerRequestFilter {
 			}
 		}
 	}
-
 }

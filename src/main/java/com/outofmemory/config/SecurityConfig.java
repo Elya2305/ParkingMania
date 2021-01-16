@@ -11,12 +11,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 
@@ -42,6 +43,7 @@ public class SecurityConfig {
     }
 
     @Configuration
+    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     protected class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
         @Override
@@ -54,7 +56,7 @@ public class SecurityConfig {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.addFilterBefore(tokenAuthorizationFilter(), BasicAuthenticationFilter.class)
-                    .csrf().disable();
+                .csrf().disable();
             http.cors().and()
                     .authorizeRequests()
                     .antMatchers("/user/login", "/user/register").permitAll()

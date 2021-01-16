@@ -1,13 +1,13 @@
 package com.outofmemory;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Log4j2
+@Slf4j
 @SpringBootApplication
 public class ParkingMania {
     private static EnvType env;

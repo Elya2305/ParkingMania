@@ -7,6 +7,7 @@ import com.outofmemory.excetion.UploadFileException;
 import com.outofmemory.utils.client.UploadFileClient;
 import com.outofmemory.utils.converer.FileConverter;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,8 +21,8 @@ import java.util.Map;
 * */
 
 // todo refactor
+@Slf4j
 @Component
-@Log4j2
 public class UploadFileClientImpl implements UploadFileClient {
     private final FileConverter fileConverter;
     @Value("${cloud.name}")
@@ -40,7 +41,7 @@ public class UploadFileClientImpl implements UploadFileClient {
         Map params = ObjectUtils.asMap("overwrite", true, "resource_type", "image");
         try {
             Map upload = cloudinary.uploader().upload(fileConverter.convert(file), params);
-            log.info(upload);
+            log.info(String.valueOf(upload));
             return map(upload);
         } catch (IOException e) {
             log.error("Error while uploading a photo", e);

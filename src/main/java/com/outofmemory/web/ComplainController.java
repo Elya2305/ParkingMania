@@ -4,11 +4,12 @@ import com.outofmemory.dto.ComplainDto;
 import com.outofmemory.service.ComplainService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Log4j2
+@Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/complaint")
