@@ -2,8 +2,6 @@ package com.outofmemory.service.impl;
 
 import com.outofmemory.dto.ComplainDto;
 import com.outofmemory.entity.ComplainInfo;
-import com.outofmemory.entity.User;
-import com.outofmemory.excetion.ValidationException;
 import com.outofmemory.repository.ComplaintRepository;
 import com.outofmemory.service.ComplainService;
 import com.outofmemory.utils.client.UploadFileClient;
@@ -12,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
 
 // todo add: update / delete (if status is new)
 @Service

@@ -1,4 +1,4 @@
-package com.outofmemory.excetion.auth;
+package com.outofmemory.exception.auth;
 
 public class LoginException extends RuntimeException {
     public LoginException() {

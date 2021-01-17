@@ -1,16 +1,12 @@
 package com.outofmemory.utils.converer.impl;
 
-import com.outofmemory.excetion.UploadFileException;
+import com.outofmemory.exception.UploadFileException;
 import com.outofmemory.utils.converer.FileConverter;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

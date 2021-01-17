@@ -1,11 +1,9 @@
 package com.outofmemory.utils.client.impl;
 
-import com.outofmemory.dto.user.auth.LoginRequestDto;
-import com.outofmemory.dto.user.auth.LoginResponseDto;
-import com.outofmemory.dto.user.auth.RegRequestDto;
-import com.outofmemory.dto.user.auth.RegResponseDto;
-import com.outofmemory.excetion.auth.LoginException;
-import com.outofmemory.excetion.auth.RegistrationException;
+import com.outofmemory.dto.user.auth.*;
+import com.outofmemory.exception.auth.LoginException;
+import com.outofmemory.exception.auth.RefreshTokenException;
+import com.outofmemory.exception.auth.RegistrationException;
 import com.outofmemory.utils.AbstractHttpClient;
 import com.outofmemory.utils.client.FirebaseAuthClient;
 import com.outofmemory.utils.helper.MessageExtractor;
@@ -23,6 +21,7 @@ public class FirebaseAuthClientImpl extends AbstractHttpClient implements Fireba
     private String apiKey;
     private static final String REG_URL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]";
     private static final String LOGIN_URL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]";
+    private static final String REFRESH_TOKEN_URL = "https://securetoken.googleapis.com/v1/token?key=[API_KEY]";
     private final MessageExtractor messageExtractor;
 
     public FirebaseAuthClientImpl(RestTemplate restTemplate, MessageExtractor messageExtractor) {
@@ -46,6 +45,15 @@ public class FirebaseAuthClientImpl extends AbstractHttpClient implements Fireba
        } catch (HttpClientErrorException exp) {
            throw new LoginException(messageExtractor.extractLoginErrorMessage(exp.getMessage()));
        }
+    }
+
+    @Override
+    public RefreshTokenResponseDto refreshToken(RefreshTokenRequestDto request) {
+        try {
+            return post(url(REFRESH_TOKEN_URL), request, RefreshTokenResponseDto.class);
+        } catch (HttpClientErrorException exp) {
+            throw new RefreshTokenException(messageExtractor.extractLoginErrorMessage(exp.getMessage()));
+        }
     }
 
     @Override

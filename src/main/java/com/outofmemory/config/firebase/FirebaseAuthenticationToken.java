@@ -5,12 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-/**
- * UsernamePasswordAuthenticationToken
- * 
- * @author prvoslav
- *
- */
 public class FirebaseAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = -1869548136546750302L;

@@ -1,4 +1,4 @@
-package com.outofmemory.excetion;
+package com.outofmemory.exception;
 
 public class UploadFileException extends RuntimeException {
     public UploadFileException() {

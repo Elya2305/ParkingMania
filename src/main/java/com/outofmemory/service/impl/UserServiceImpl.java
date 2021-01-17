@@ -1,9 +1,8 @@
 package com.outofmemory.service.impl;
 
-import com.outofmemory.dto.user.LoginPasswordDto;
 import com.outofmemory.dto.user.auth.*;
 import com.outofmemory.entity.User;
-import com.outofmemory.excetion.auth.LoginException;
+import com.outofmemory.exception.auth.LoginException;
 import com.outofmemory.repository.UserRepository;
 import com.outofmemory.service.UserMapper;
 import com.outofmemory.service.UserService;
@@ -12,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -24,14 +24,10 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    // reason
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDetails userDetails = userRepository.findByEmail(email);
-        if (userDetails == null)
-            return null;
-
-        return new org.springframework.security.core.userdetails.User(userDetails.getUsername(),
-                userDetails.getPassword(), userDetails.getAuthorities());
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        return userRepository.findByLocalId(userName)
+                .orElseThrow(() -> new NoSuchElementException("Can't find user with localId " + userName));
     }
 
     @Override
@@ -39,24 +35,27 @@ public class UserServiceImpl implements UserService {
         RegResponseDto response = authClient.register(RegRequestDto.of(dto.getEmail(), dto.getPassword()));
         User user = userMapper.map(response);
         userRepository.save(user);
-        return TokenDto.of(response.getIdToken());
+        return token(response);
     }
 
     @Override
     public TokenDto login(LoginRequestDto dto) {
         LoginResponseDto response = authClient.login(dto);
         validateLogin(response);
-        return TokenDto.of(response.getIdToken());
+        return token(response);
     }
 
     private void validateLogin(LoginResponseDto response) {
-        if (!userRepository.existsByIdToken(response.getIdToken())) {
+        if (!userRepository.existsByLocalId(response.getLocalId())) {
             throw new LoginException("User don't present in db");
         }
     }
 
-    private User getFromDb(String idToken) {
-        return userRepository.findByIdToken(idToken).orElseThrow(() ->
-                new NoSuchElementException("Can't find user with idToken " + idToken));
+    private TokenDto token(BaseAuthResponseDto source) {
+        TokenDto destination = new TokenDto();
+        destination.setExpiresIn(source.getExpiresIn());
+        destination.setRefreshToken(source.getRefreshToken());
+        destination.setToken(source.getIdToken());
+        return destination;
     }
 }

@@ -1,4 +1,4 @@
-package com.outofmemory.excetion;
+package com.outofmemory.exception;
 
 public class ValidationException extends RuntimeException {
     public ValidationException() {

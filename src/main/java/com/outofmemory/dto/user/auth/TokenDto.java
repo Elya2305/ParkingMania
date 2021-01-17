@@ -1,14 +1,11 @@
 package com.outofmemory.dto.user.auth;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
-public class TokenDto {
-    private String token;
-
-    public static TokenDto of(String idToken) {
-        return new TokenDto(idToken);
-    }
+public class TokenDto extends BaseTokenDto {
+    private String refreshToken;
+    private String expiresIn;
 }

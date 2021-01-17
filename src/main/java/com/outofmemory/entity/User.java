@@ -1,21 +1,23 @@
 package com.outofmemory.entity;
 
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Table(name = "usr")
 @Entity
 @Data
+@ToString(exclude = {"complaints"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    private String idToken;
     private String username;
     private String email;
     private String localId;
@@ -28,10 +30,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(role);
     }
 
-    // todo
     @Override
     public String getPassword() {
         return null;
@@ -54,12 +55,16 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-//        return this.status != Status.BLOCKED;
         return true;
     }
 
-    public enum Role {
-        USER, ADMIN
+    public enum Role implements GrantedAuthority {
+        USER, ADMIN;
+
+        @Override
+        public String getAuthority() {
+            return this.name();
+        }
     }
 
     public enum Status {
