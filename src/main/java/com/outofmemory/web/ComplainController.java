@@ -21,6 +21,18 @@ public class ComplainController {
         return complainService.add(dto);
     }
 
+    @PutMapping
+    public boolean update(@RequestBody ComplainDto dto) {
+        log.info("Request on updating complaint - {}", dto);
+        return complainService.update(dto);
+    }
+
+    @DeleteMapping
+    public boolean delete(@RequestParam Integer id) {
+        log.info("Request on deleting complaint with id - {}", id);
+        return complainService.delete(id);
+    }
+
     @GetMapping
     public List<ComplainDto> all() {
         log.info("Request on getting complaints");

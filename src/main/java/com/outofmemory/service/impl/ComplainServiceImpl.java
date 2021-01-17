@@ -2,6 +2,7 @@ package com.outofmemory.service.impl;
 
 import com.outofmemory.dto.ComplainDto;
 import com.outofmemory.entity.ComplainInfo;
+import com.outofmemory.exception.ValidationException;
 import com.outofmemory.repository.ComplaintRepository;
 import com.outofmemory.service.ComplainService;
 import com.outofmemory.service.GeoService;
@@ -10,9 +11,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-// todo add: update / delete (if status is new)
+import static java.util.Objects.isNull;
+
 @Service
 @AllArgsConstructor
 public class ComplainServiceImpl implements ComplainService {
@@ -23,9 +26,24 @@ public class ComplainServiceImpl implements ComplainService {
 
     @Override
     public boolean add(ComplainDto dto) {
-        validate(dto);
         ComplainInfo newComplaint = map(dto, new ComplainInfo());
         complaintRepository.save(newComplaint);
+        return true;
+    }
+
+    @Override
+    public boolean update(ComplainDto dto) {
+        ComplainInfo entity = getFromDb(dto.getId());
+        validateUpdate(entity);
+        map(dto, entity);
+        complaintRepository.save(entity);
+        return true;
+    }
+
+    @Override
+    public boolean delete(Integer id) {
+        validateDelete(id);
+        complaintRepository.delete(id);
         return true;
     }
 
@@ -34,6 +52,11 @@ public class ComplainServiceImpl implements ComplainService {
         return complaintRepository.findAll()
                 .stream().map(this::map)
                 .collect(Collectors.toList());
+    }
+
+    private ComplainInfo getFromDb(Integer id) {
+        return complaintRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Can't find complain by id " + id));
     }
 
     // todo add photo
@@ -54,7 +77,16 @@ public class ComplainServiceImpl implements ComplainService {
         return destination;
     }
 
-    private void validate(ComplainDto dto) {
-        // todo
+    private void validateUpdate(ComplainInfo entity) {
+        if (!entity.getStatus().equals(ComplainInfo.Status.NEW)) {
+            throw new ValidationException("Sorry, you can't update complaint with status " + entity.getStatus());
+        }
+    }
+
+    private void validateDelete(Integer id) {
+        ComplainInfo.Status status = complaintRepository.getStatusById(id);
+        if (isNull(status) || ComplainInfo.Status.NEW != status) {
+            throw new ValidationException("Sorry, you can't delete complaint with status " + status);
+        }
     }
 }
