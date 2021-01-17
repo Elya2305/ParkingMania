@@ -4,6 +4,7 @@ import com.outofmemory.dto.ComplainDto;
 import com.outofmemory.entity.ComplainInfo;
 import com.outofmemory.repository.ComplaintRepository;
 import com.outofmemory.service.ComplainService;
+import com.outofmemory.service.GeoService;
 import com.outofmemory.utils.client.UploadFileClient;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ComplainServiceImpl implements ComplainService {
     private final UploadFileClient uploadFileClient;
     private final ComplaintRepository complaintRepository;
+    private final GeoService geoService;
 
 
     @Override
@@ -34,12 +36,13 @@ public class ComplainServiceImpl implements ComplainService {
                 .collect(Collectors.toList());
     }
 
+    // todo add photo
     private ComplainInfo map(ComplainDto resource, ComplainInfo destination) {
         destination.setId(resource.getId());
-        destination.setStatus(ComplainInfo.Status.NEW);
         destination.setAutoNumber(resource.getAutoNumber());
         destination.setDescription(resource.getDescription());
-//        destination.setPhotoUrl(uploadFileClient.uploadFile(resource.getPhoto()).getUrl());
+        destination.setLocation(resource.getLocation());
+        destination.setLocationAddress(geoService.address(resource.getLocation()));
         return destination;
     }
 

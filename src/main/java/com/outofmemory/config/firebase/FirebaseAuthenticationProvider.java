@@ -19,10 +19,12 @@ public class FirebaseAuthenticationProvider extends DaoAuthenticationProvider {
 		this.setUserDetailsService(userService);
 	}
 
+	@Override
 	public boolean supports(Class<?> authentication) {
 		return (FirebaseAuthenticationToken.class.isAssignableFrom(authentication));
 	}
 
+	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		if (!supports(authentication.getClass())) {
 			return null;

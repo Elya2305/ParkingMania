@@ -4,12 +4,8 @@ import com.outofmemory.dto.user.auth.*;
 import com.outofmemory.service.UserService;
 import com.outofmemory.utils.client.FirebaseAuthClient;
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -27,6 +23,7 @@ public class UserController {
         return response;
     }
 
+    // todo
     @PostMapping("/login")
     public TokenDto login(@RequestBody LoginRequestDto request) {
         log.info("Request on login - {}", request);
@@ -40,5 +37,10 @@ public class UserController {
     public RefreshTokenResponseDto refreshToken(@RequestBody BaseTokenDto request) {
         log.info("Request on refreshing token - {}", request);
         return authClient.refreshToken(RefreshTokenRequestDto.of(request.getToken()));
+    }
+
+    @GetMapping("/access")
+    public boolean haveAccess() {
+        return true;
     }
 }

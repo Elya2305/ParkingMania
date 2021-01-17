@@ -3,11 +3,13 @@ package com.outofmemory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@EnableJpaAuditing
 @SpringBootApplication
 public class ParkingMania {
     private static EnvType env;

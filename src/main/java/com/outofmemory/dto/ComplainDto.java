@@ -9,5 +9,5 @@ public class ComplainDto {
 //    private MultipartFile photo; // todo
     private String description;
     private String autoNumber;
-//    private LocationDto location; // todo
+    private LocationDto location;
 }

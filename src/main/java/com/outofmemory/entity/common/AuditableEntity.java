@@ -9,20 +9,20 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+import java.util.Date;
 
-// todo configure context
+// todo
 
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class AuditableEntity {
     @LastModifiedBy
-    private Integer lastModifiedBy;
+    private String lastModifiedBy;
     @CreatedBy
-    private Integer ownerId;
+    private String ownerId;
     @CreatedDate
-    private LocalDateTime dateCreated;
+    private Date dateCreated; // blob ?
     @LastModifiedDate
-    private LocalDateTime dateModified;
+    private Date  dateModified;
 }

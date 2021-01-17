@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,7 +38,9 @@ public class UploadFileClientImpl implements UploadFileClient {
 
     public FileDto uploadFile(MultipartFile file) {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", CLOUD_NAME, "api_key", API_KEY, "api_secret", API_SECRET));
-        Map params = ObjectUtils.asMap("overwrite", true, "resource_type", "image");
+        Map<String, Object> params = new HashMap<>();
+        params.put("overwrite", true);
+        params.put("resource_type", "image");
         try {
             Map upload = cloudinary.uploader().upload(fileConverter.convert(file), params);
             log.info(String.valueOf(upload));

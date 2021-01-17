@@ -39,8 +39,8 @@ public class FirebaseFilter extends OncePerRequestFilter {
                 log.error("Ann error occurred", e);
                 throw new SecurityException(e);
             }
-            filterChain.doFilter(request, response);
-            log.info("End firebase filtering");
         }
+        filterChain.doFilter(request, response);
+        log.info("End firebase filtering");
     }
 }

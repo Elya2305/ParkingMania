@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Table(name = "usr")
+@Table(name = "users")
 @Entity
 @Data
 @ToString(exclude = {"complaints"})
