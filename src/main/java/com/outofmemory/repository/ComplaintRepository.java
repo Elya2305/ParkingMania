@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ComplaintRepository extends JpaRepository<ComplainInfo, Integer> {
@@ -12,4 +13,8 @@ public interface ComplaintRepository extends JpaRepository<ComplainInfo, Integer
 
     @Query("select ci.status from ComplainInfo ci where ci.id =:id")
     ComplainInfo.Status getStatusById(@Param("id") Integer id);
+
+    List<ComplainInfo> findAllByOwnerIdAndStatus(String ownerId, ComplainInfo.Status status);
+
+    List<ComplainInfo> findAllByStatus(ComplainInfo.Status status);
 }

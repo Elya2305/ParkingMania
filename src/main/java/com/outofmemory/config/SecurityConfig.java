@@ -5,12 +5,11 @@ import com.outofmemory.config.firebase.FirebaseFilter;
 import com.outofmemory.service.FirebaseService;
 import com.outofmemory.service.UserService;
 import com.outofmemory.service.impl.UserServiceImpl;
+import com.outofmemory.utils.client.FirebaseAuthClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
@@ -23,7 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableWebSecurity(debug = false)
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @Configuration
 public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
@@ -57,14 +56,9 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
-                        .authorizeRequests()
-                        .antMatchers("/user/login", "/user/register", "/alive", "/token").permitAll()
-//                    .anyRequest().authenticated()
-                    .and()
-                        .formLogin()
-                        .loginProcessingUrl("/user/login")
-                        .usernameParameter("localId")
-                        .permitAll()
+                    .authorizeRequests()
+                    .antMatchers("/user/login", "/user/register", "/alive", "/token").permitAll()
+                    .anyRequest().authenticated()
                     .and()
                     .addFilterAt(tokenAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         }

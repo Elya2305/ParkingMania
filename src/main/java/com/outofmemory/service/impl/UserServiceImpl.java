@@ -1,27 +1,37 @@
 package com.outofmemory.service.impl;
 
+import com.outofmemory.config.firebase.FirebaseTokenHolder;
+import com.outofmemory.dto.user.UserDto;
 import com.outofmemory.dto.user.auth.*;
 import com.outofmemory.entity.User;
 import com.outofmemory.exception.auth.LoginException;
 import com.outofmemory.repository.UserRepository;
+import com.outofmemory.service.FirebaseService;
 import com.outofmemory.service.UserMapper;
 import com.outofmemory.service.UserService;
 import com.outofmemory.utils.client.FirebaseAuthClient;
+import com.outofmemory.utils.security.AuthGateway;
+import com.outofmemory.utils.security.PermissionChecker;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service(value = UserServiceImpl.NAME)
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     public final static String NAME = "UserService";
     private final UserRepository userRepository;
-    private final FirebaseAuthClient authClient;
     private final UserMapper userMapper;
+    private final FirebaseService firebaseService;
 
     @Override
     @Transactional(readOnly = true)
@@ -31,31 +41,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto register(RegRequestDto dto) {
-        RegResponseDto response = authClient.register(RegRequestDto.of(dto.getEmail(), dto.getPassword()));
-        User user = userMapper.map(response);
-        userRepository.save(user);
-        return token(response);
+    public List<UserDto> all() {
+        PermissionChecker.isAdmin();
+        return userRepository.findAll().stream()
+                .map(userMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public TokenDto login(LoginRequestDto dto) {
-        LoginResponseDto response = authClient.login(dto);
-        validateLogin(response);
-        return token(response);
+    public UserDto getCurrent() {
+        return userMapper.map(getFromDb(AuthGateway.currentUserId()));
     }
 
-    private void validateLogin(LoginResponseDto response) {
-        if (!userRepository.existsByLocalId(response.getLocalId())) {
-            throw new LoginException("User don't present in db");
-        }
-    }
 
-    private TokenDto token(BaseAuthResponseDto source) {
-        TokenDto destination = new TokenDto();
-        destination.setExpiresIn(source.getExpiresIn());
-        destination.setRefreshToken(source.getRefreshToken());
-        destination.setToken(source.getIdToken());
-        return destination;
+    private User getFromDb(String localId) {
+        return userRepository.findByLocalId(localId)
+                .orElseThrow(() -> new NoSuchElementException("Can't find user with localId " + localId));
     }
 }

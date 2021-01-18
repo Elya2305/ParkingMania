@@ -1,6 +1,8 @@
 package com.outofmemory.exception.auth;
 
-public class RefreshTokenException extends RuntimeException {
+import com.outofmemory.exception.CustomUserException;
+
+public class RefreshTokenException extends CustomUserException {
     public RefreshTokenException() {
     }
 

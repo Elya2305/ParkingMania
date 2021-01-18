@@ -1,6 +1,8 @@
 package com.outofmemory.exception.auth;
 
-public class TokenExpiredException extends RuntimeException {
+import com.outofmemory.exception.CustomUserException;
+
+public class TokenExpiredException extends CustomUserException {
     public TokenExpiredException() {
     }
 

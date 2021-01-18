@@ -1,6 +1,8 @@
 package com.outofmemory.web;
 
 import com.outofmemory.dto.ComplainDto;
+import com.outofmemory.dto.ComplaintStatusDto;
+import com.outofmemory.entity.ComplainInfo;
 import com.outofmemory.service.ComplainService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +35,15 @@ public class ComplainController {
         return complainService.delete(id);
     }
 
-    @GetMapping
-    public List<ComplainDto> all() {
+    @GetMapping // todo add pagination
+    public List<ComplainDto> allOfCurrentByStatus(@RequestBody ComplaintStatusDto request) {
         log.info("Request on getting complaints");
-        return complainService.all();
+        return complainService.allOfCurrent(request.getStatus());
+    }
+
+    @GetMapping
+    public List<ComplainDto> allByStatus(@RequestBody ComplaintStatusDto request) {
+        log.info("Request on getting complaints");
+        return complainService.all(request.getStatus());
     }
 }

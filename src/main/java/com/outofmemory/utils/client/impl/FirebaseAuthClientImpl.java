@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+// todo fix readable message
 @Slf4j
 @Service
 public class FirebaseAuthClientImpl extends AbstractHttpClient implements FirebaseAuthClient {

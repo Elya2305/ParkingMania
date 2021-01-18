@@ -2,10 +2,8 @@ package com.outofmemory.config.firebase;
 
 import com.outofmemory.exception.auth.FirebaseUserNotExistsException;
 import com.outofmemory.service.impl.UserServiceImpl;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -20,26 +18,26 @@ public class FirebaseAuthenticationProvider extends DaoAuthenticationProvider {
 	}
 
 	@Override
-	public boolean supports(Class<?> authentication) {
-		return (FirebaseAuthenticationToken.class.isAssignableFrom(authentication));
-	}
-
-	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		if (!supports(authentication.getClass())) {
 			return null;
 		}
 
-		FirebaseAuthenticationToken authenticationToken = (FirebaseAuthenticationToken) authentication;
+		UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) authentication;
 
 		UserDetails details = this.getUserDetailsService().loadUserByUsername((String) authenticationToken.getPrincipal());
 		if (details == null) {
 			throw new FirebaseUserNotExistsException();
 		}
 
-		authenticationToken = new FirebaseAuthenticationToken(details, authentication.getCredentials(),
+		authenticationToken = new UsernamePasswordAuthenticationToken(details, authentication.getCredentials(),
 				details.getAuthorities());
 
 		return authenticationToken;
+	}
+
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
 	}
 }

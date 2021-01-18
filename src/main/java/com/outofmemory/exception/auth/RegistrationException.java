@@ -1,6 +1,8 @@
 package com.outofmemory.exception.auth;
 
-public class RegistrationException extends RuntimeException {
+import com.outofmemory.exception.CustomUserException;
+
+public class RegistrationException extends CustomUserException {
     public RegistrationException() {
     }
 

@@ -18,10 +18,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    private String username;
     private String email;
     private String localId;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<ComplainInfo> complaints;
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -58,16 +57,21 @@ public class User implements UserDetails {
         return true;
     }
 
+    @Override
+    public String getUsername() {
+        return localId;
+    }
+
     public enum Role implements GrantedAuthority {
         USER, ADMIN;
-
         @Override
         public String getAuthority() {
             return this.name();
         }
-    }
 
+    }
     public enum Status {
         ACTIVE, BLOCKED
+
     }
 }

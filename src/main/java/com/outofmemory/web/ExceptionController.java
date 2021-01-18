@@ -1,5 +1,6 @@
 package com.outofmemory.web;
 
+import com.outofmemory.exception.CustomUserException;
 import com.outofmemory.exception.UploadFileException;
 import com.outofmemory.exception.ValidationException;
 import com.outofmemory.exception.auth.FirebaseTokenInvalidException;
@@ -21,10 +22,8 @@ public class ExceptionController {
         return SOMETHING_WENT_WRONG;
     }
 
-    // todo implement interface
-    @ExceptionHandler({UploadFileException.class, ValidationException.class, RegistrationException.class,
-            LoginException.class, FirebaseTokenInvalidException.class})
-    public String handleUploadFileException(Exception ex) {
+    @ExceptionHandler(CustomUserException.class)
+    public String handleUploadFileException(CustomUserException ex) {
         log.error("Was caught exception!", ex);
         return ex.getMessage();
     }

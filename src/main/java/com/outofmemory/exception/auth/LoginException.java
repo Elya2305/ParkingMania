@@ -1,6 +1,8 @@
 package com.outofmemory.exception.auth;
 
-public class LoginException extends RuntimeException {
+import com.outofmemory.exception.CustomUserException;
+
+public class LoginException extends CustomUserException {
     public LoginException() {
     }
 

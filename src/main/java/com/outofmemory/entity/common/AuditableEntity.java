@@ -20,6 +20,6 @@ public class AuditableEntity {
     private String ownerId;
 //    @CreatedDate
 //    private Date dateCreated; // blob ?
-//    @LastModifiedDate
+//     @LastModifiedDate
 //    private Date  dateModified;
 }

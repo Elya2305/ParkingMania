@@ -7,6 +7,8 @@ import com.outofmemory.repository.ComplaintRepository;
 import com.outofmemory.service.ComplainService;
 import com.outofmemory.service.GeoService;
 import com.outofmemory.utils.client.UploadFileClient;
+import com.outofmemory.utils.security.AuthGateway;
+import com.outofmemory.utils.security.PermissionChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,8 +50,17 @@ public class ComplainServiceImpl implements ComplainService {
     }
 
     @Override
-    public List<ComplainDto> all() {
-        return complaintRepository.findAll()
+    public List<ComplainDto> allOfCurrent(ComplainInfo.Status status) {
+        return complaintRepository.findAllByOwnerIdAndStatus(
+                AuthGateway.currentUserId(), status)
+                .stream().map(this::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ComplainDto> all(ComplainInfo.Status status) {
+        PermissionChecker.isAdmin();
+        return complaintRepository.findAllByStatus(status)
                 .stream().map(this::map)
                 .collect(Collectors.toList());
     }
@@ -74,6 +85,8 @@ public class ComplainServiceImpl implements ComplainService {
         destination.setId(resource.getId());
         destination.setAutoNumber(resource.getAutoNumber());
         destination.setDescription(resource.getDescription());
+        destination.setAddress(resource.getLocationAddress());
+        destination.setLocation(resource.getLocation());
         return destination;
     }
 

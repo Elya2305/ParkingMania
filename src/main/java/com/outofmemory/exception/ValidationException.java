@@ -1,6 +1,6 @@
 package com.outofmemory.exception;
 
-public class ValidationException extends RuntimeException {
+public class ValidationException extends CustomUserException {
     public ValidationException() {
     }
 

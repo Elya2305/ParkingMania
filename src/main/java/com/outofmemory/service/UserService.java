@@ -1,12 +1,15 @@
 package com.outofmemory.service;
 
+import com.outofmemory.dto.user.UserDto;
 import com.outofmemory.dto.user.auth.LoginRequestDto;
 import com.outofmemory.dto.user.auth.RegRequestDto;
 import com.outofmemory.dto.user.auth.TokenDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService extends UserDetailsService {
-    TokenDto register(RegRequestDto dto);
+import java.util.List;
 
-    TokenDto login(LoginRequestDto dto);
+public interface UserService extends UserDetailsService {
+    List<UserDto> all();
+
+    UserDto getCurrent();
 }

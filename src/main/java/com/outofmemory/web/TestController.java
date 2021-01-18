@@ -2,9 +2,12 @@ package com.outofmemory.web;
 
 import com.outofmemory.dto.FileDto;
 import com.outofmemory.dto.geo.GeoResponseDto;
+import com.outofmemory.exception.UploadFileException;
+import com.outofmemory.exception.ValidationException;
 import com.outofmemory.utils.client.GeocodingClient;
 import com.outofmemory.utils.client.UploadFileClient;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

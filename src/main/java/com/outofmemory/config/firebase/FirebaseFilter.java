@@ -3,8 +3,10 @@ package com.outofmemory.config.firebase;
 import com.cloudinary.utils.StringUtils;
 import com.outofmemory.exception.auth.FirebaseTokenInvalidException;
 import com.outofmemory.service.FirebaseService;
+import com.outofmemory.utils.client.FirebaseAuthClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,24 +21,24 @@ import java.io.IOException;
 @AllArgsConstructor
 public class FirebaseFilter extends OncePerRequestFilter {
     private final static String HEADER_NAME = "X-Authorization-Firebase";
+    private final static String TOKEN_URL = "/refresh-token";
     private final FirebaseService firebaseService;
 
-    // todo fix recursion
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         log.info("Start firebase filtering");
         String xAuth = request.getHeader(HEADER_NAME);
-        if (!StringUtils.isBlank(xAuth)) {
+        if (!StringUtils.isBlank(xAuth) && !request.getRequestURL().toString().contains(TOKEN_URL)) {
             try {
                 FirebaseTokenHolder holder = firebaseService.parseToken(xAuth);
                 String userName = holder.getUid();
 
-                Authentication auth = new FirebaseAuthenticationToken(userName, holder);
+                Authentication auth = new UsernamePasswordAuthenticationToken(userName, holder);
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (FirebaseTokenInvalidException e) {
-                log.error("Ann error occurred", e);
+                log.error("An error occurred", e);
                 throw new SecurityException(e);
             }
         }

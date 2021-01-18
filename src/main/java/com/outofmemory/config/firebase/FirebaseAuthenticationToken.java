@@ -35,7 +35,7 @@ public class FirebaseAuthenticationToken extends AbstractAuthenticationToken {
 	 * @param authorities
 	 */
 	public FirebaseAuthenticationToken(Object principal, Object credentials,
-			Collection<? extends GrantedAuthority> authorities) {
+                                       Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.principal = principal;
 		this.credentials = credentials;
