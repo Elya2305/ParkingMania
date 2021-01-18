@@ -28,10 +28,4 @@ public class UserController {
         return userService.getCurrent();
     }
 
-
-
-    @GetMapping("/access")
-    public boolean haveAccess() {
-        return true;
-    }
 }

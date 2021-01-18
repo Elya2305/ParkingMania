@@ -11,4 +11,9 @@ public class AliveController {
         return true;
     }
 
+
+    @GetMapping("/access")
+    public boolean haveAccess() {
+        return true;
+    }
 }
