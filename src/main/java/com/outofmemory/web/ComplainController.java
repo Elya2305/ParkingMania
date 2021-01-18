@@ -35,7 +35,7 @@ public class ComplainController {
         return complainService.delete(id);
     }
 
-    @GetMapping // todo add pagination
+    @GetMapping("/by-user") // todo add pagination
     public List<ComplainDto> allOfCurrentByStatus(@RequestBody ComplaintStatusDto request) {
         log.info("Request on getting complaints");
         return complainService.allOfCurrent(request.getStatus());
