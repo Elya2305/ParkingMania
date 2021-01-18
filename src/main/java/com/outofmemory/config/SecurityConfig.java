@@ -59,7 +59,6 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
             return new String[]{
                     "/alive",
                     "/token",
-                    "/registration/**",
                     "/user/login",
                     "/user/register",
                     "/api-docs/**",
