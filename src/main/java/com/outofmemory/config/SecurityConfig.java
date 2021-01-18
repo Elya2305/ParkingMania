@@ -5,7 +5,6 @@ import com.outofmemory.config.firebase.FirebaseFilter;
 import com.outofmemory.service.FirebaseService;
 import com.outofmemory.service.UserService;
 import com.outofmemory.service.impl.UserServiceImpl;
-import com.outofmemory.utils.client.FirebaseAuthClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -43,12 +41,6 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
     protected class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
         @Override
-        public void configure(WebSecurity web) {
-            web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
-                    "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v2/swagger.json");
-        }
-
-        @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.cors()
                     .and()
@@ -57,10 +49,25 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/user/login", "/user/register", "/alive", "/token").permitAll()
+                    .antMatchers(openEndpoints()).permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .addFilterAt(tokenAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+        }
+
+        private String[] openEndpoints() {
+            return new String[]{
+                    "/alive",
+                    "/token",
+                    "/registration/**",
+                    "/user/login",
+                    "/user/register",
+                    "/api-docs/**",
+                    "/v3/api-docs/**",
+                    "/swagger-resources/**",
+                    "/swagger-ui.html",
+                    "/v2/api-docs",
+            };
         }
     }
 
