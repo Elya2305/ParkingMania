@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
     public final static String NAME = "UserService";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final FirebaseService firebaseService;
 
     @Override
     @Transactional(readOnly = true)

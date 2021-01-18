@@ -19,7 +19,7 @@ public enum MenuItem {
         }
     };
 
-    private String name;
+    private final String name;
 
     MenuItem(String name) {
         this.name = name;

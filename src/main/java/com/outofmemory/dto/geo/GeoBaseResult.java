@@ -12,6 +12,4 @@ public class GeoBaseResult {
     private List<String> types;
     private String formattedAddress;
     private List<AddressComponent> addressComponents;
-//    private String placeId;
-//    private List<String> plusCode;
 }

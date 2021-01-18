@@ -3,7 +3,6 @@ package com.outofmemory.config.firebase;
 import com.cloudinary.utils.StringUtils;
 import com.outofmemory.exception.auth.FirebaseTokenInvalidException;
 import com.outofmemory.service.FirebaseService;
-import com.outofmemory.utils.client.FirebaseAuthClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
