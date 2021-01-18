@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-// todo check isAuthenticated?
 @Slf4j
 @Component
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
@@ -18,7 +17,6 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
     public String getCurrentAuditor() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
-//                .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
                 .map(String.class::cast)
                 .orElse(EMPTY);

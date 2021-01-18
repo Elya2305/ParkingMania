@@ -15,12 +15,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
-*
-* class in Java 4 style
-* */
-
-// todo refactor
 @Slf4j
 @Component
 public class UploadFileClientImpl implements UploadFileClient {

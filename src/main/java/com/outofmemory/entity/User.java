@@ -64,14 +64,14 @@ public class User implements UserDetails {
 
     public enum Role implements GrantedAuthority {
         USER, ADMIN;
+
         @Override
         public String getAuthority() {
             return this.name();
         }
-
     }
+
     public enum Status {
         ACTIVE, BLOCKED
-
     }
 }

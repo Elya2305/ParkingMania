@@ -1,21 +1,13 @@
 package com.outofmemory.service.impl;
 
-import com.outofmemory.config.firebase.FirebaseTokenHolder;
 import com.outofmemory.dto.user.UserDto;
-import com.outofmemory.dto.user.auth.*;
 import com.outofmemory.entity.User;
-import com.outofmemory.exception.auth.LoginException;
 import com.outofmemory.repository.UserRepository;
-import com.outofmemory.service.FirebaseService;
 import com.outofmemory.service.UserMapper;
 import com.outofmemory.service.UserService;
-import com.outofmemory.utils.client.FirebaseAuthClient;
 import com.outofmemory.utils.security.AuthGateway;
 import com.outofmemory.utils.security.PermissionChecker;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
