@@ -67,6 +67,9 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     "/swagger-resources/**",
                     "/swagger-ui.html",
                     "/v2/api-docs",
+                    "/js/**",
+                    "/css/**",
+                    "/webjars/springfox-swagger-ui/**"
             };
         }
     }
