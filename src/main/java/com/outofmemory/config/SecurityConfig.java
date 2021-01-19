@@ -55,6 +55,7 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     .addFilterAt(tokenAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         }
 
+
         private String[] openEndpoints() {
             return new String[]{
                     "/alive",
