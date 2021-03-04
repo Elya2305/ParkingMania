@@ -27,5 +27,4 @@ public class UserController {
         log.info("Request on getting profile");
         return userService.getCurrent();
     }
-
 }

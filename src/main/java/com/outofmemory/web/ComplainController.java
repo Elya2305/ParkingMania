@@ -2,7 +2,6 @@ package com.outofmemory.web;
 
 import com.outofmemory.dto.ComplainDto;
 import com.outofmemory.dto.ComplaintStatusDto;
-import com.outofmemory.entity.ComplainInfo;
 import com.outofmemory.service.ComplainService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -51,7 +51,8 @@ public class MessageExtractorImpl implements MessageExtractor {
     private enum RegistrationError implements ErrorMessage {
         EMAIL_EXISTS("Email already exists"),
         OPERATION_NOT_ALLOWED("Operation is not allowed"),
-        TOO_MANY_ATTEMPTS_TRY_LATER("Too many attempts. Please try later");
+        TOO_MANY_ATTEMPTS_TRY_LATER("Too many attempts. Please try later"),
+        WEAK_PASSWORD("Password should be at least 6 characters");
 
         RegistrationError(String message) {
             this.message = message;

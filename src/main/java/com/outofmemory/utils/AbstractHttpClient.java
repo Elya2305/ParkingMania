@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public abstract class AbstractHttpClient implements RestHttpClient {
         try {
             HttpEntity<String> request = new HttpEntity<>(headers());
             return restTemplate.exchange(url, HttpMethod.GET, request, String.class).getBody();
-        } catch (RuntimeException e) {
+        } catch (HttpClientErrorException e) {
             log.error("Error while processing get request", e);
             throw e;
         }
@@ -30,7 +31,7 @@ public abstract class AbstractHttpClient implements RestHttpClient {
         try {
             HttpEntity<T> request = new HttpEntity<>(headers());
             return restTemplate.exchange(url, HttpMethod.GET, request, response).getBody();
-        } catch (RuntimeException e) {
+        } catch (HttpClientErrorException e) {
             log.error("Error while processing get request", e);
             throw e;
         }
@@ -42,7 +43,7 @@ public abstract class AbstractHttpClient implements RestHttpClient {
             log.info("Post to {}", url);
             HttpEntity<R> requestEntity = new HttpEntity<>(request, headers());
             return restTemplate.exchange(url, HttpMethod.POST, requestEntity, response).getBody();
-        } catch (RuntimeException e) {
+        } catch (HttpClientErrorException e) {
             log.error("Error while processing post request", e);
             throw e;
         }

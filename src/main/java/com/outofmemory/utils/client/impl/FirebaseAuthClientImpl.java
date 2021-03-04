@@ -35,7 +35,7 @@ public class FirebaseAuthClientImpl extends AbstractHttpClient implements Fireba
         try {
            return post(url(REG_URL), request, RegResponseDto.class);
         } catch (HttpClientErrorException exp) {
-            throw new RegistrationException(messageExtractor.extractRegErrorMessage(exp.getMessage()));
+            throw new RegistrationException(messageExtractor.extractRegErrorMessage(exp.getResponseBodyAsString()));
         }
     }
 
@@ -44,7 +44,7 @@ public class FirebaseAuthClientImpl extends AbstractHttpClient implements Fireba
        try {
            return post(url(LOGIN_URL), request, LoginResponseDto.class);
        } catch (HttpClientErrorException exp) {
-           throw new LoginException(messageExtractor.extractLoginErrorMessage(exp.getMessage()));
+           throw new LoginException(messageExtractor.extractLoginErrorMessage(exp.getResponseBodyAsString()));
        }
     }
 
@@ -53,7 +53,7 @@ public class FirebaseAuthClientImpl extends AbstractHttpClient implements Fireba
         try {
             return post(url(REFRESH_TOKEN_URL), request, RefreshTokenResponseDto.class);
         } catch (HttpClientErrorException exp) {
-            throw new RefreshTokenException(messageExtractor.extractLoginErrorMessage(exp.getMessage()));
+            throw new RefreshTokenException(messageExtractor.extractLoginErrorMessage(exp.getResponseBodyAsString()));
         }
     }
 

@@ -60,8 +60,8 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
             return new String[]{
                     "/alive",
                     "/token",
-                    "/user/login",
-                    "/user/register",
+                    "/auth/login",
+                    "/auth/register",
                     "/api-docs/**",
                     "/v3/api-docs/**",
                     "/swagger-resources/**",
