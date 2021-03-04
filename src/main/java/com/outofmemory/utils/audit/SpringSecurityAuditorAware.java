@@ -1,6 +1,5 @@
 package com.outofmemory.utils.audit;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -9,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Slf4j
-@Component
+@Component(value = SpringSecurityAuditorAware.NAME)
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
     private final static String EMPTY = "EMPTY";
+    public final static String NAME = "AuditorProvider";
 
     public String getCurrentAuditor() {
         return Optional.ofNullable(SecurityContextHolder.getContext())

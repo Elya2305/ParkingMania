@@ -1,6 +1,8 @@
 package com.outofmemory.entity;
 
+import com.outofmemory.entity.common.AuditableEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,11 +12,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "users")
 @Entity
 @Data
 @ToString(exclude = {"complaints"})
-public class User implements UserDetails {
+public class User extends AuditableEntity implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;

@@ -1,14 +1,19 @@
 package com.outofmemory.entity.common;
 
+import com.outofmemory.utils.converer.impl.LocalDateTimeConverter;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-
-// todo dateCreated, dateModified
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @MappedSuperclass
@@ -18,8 +23,10 @@ public class AuditableEntity {
     private String lastModifiedBy;
     @CreatedBy
     private String ownerId;
-//    @CreatedDate
-//    private Date dateCreated; // blob ?
-//     @LastModifiedDate
-//    private Date  dateModified;
+    @Convert(converter = LocalDateTimeConverter.class)
+    @CreatedDate
+    private LocalDateTime dateCreated;
+    @Convert(converter = LocalDateTimeConverter.class)
+    @LastModifiedDate
+    private LocalDateTime dateModified;
 }

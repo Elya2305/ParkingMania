@@ -1,5 +1,6 @@
 package com.outofmemory;
 
+import com.outofmemory.utils.audit.SpringSecurityAuditorAware;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 @Slf4j
 @EnableSwagger2
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = SpringSecurityAuditorAware.NAME)
 @SpringBootApplication
 public class ParkingMania {
     private static EnvType env;
