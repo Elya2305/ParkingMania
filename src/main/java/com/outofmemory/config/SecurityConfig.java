@@ -2,6 +2,7 @@ package com.outofmemory.config;
 
 import com.outofmemory.config.firebase.FirebaseAuthenticationProvider;
 import com.outofmemory.config.firebase.FirebaseFilter;
+import com.outofmemory.security.filter.CheckRoleHaveAccessFilter;
 import com.outofmemory.service.FirebaseService;
 import com.outofmemory.service.UserService;
 import com.outofmemory.service.impl.UserServiceImpl;
@@ -18,13 +19,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
+
+import javax.servlet.Filter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @Configuration
 public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
 
+    private final static String BASE_PACKAGE = "com.outofmemory.web";
     private UserDetailsService userService;
 
     @Bean
@@ -48,6 +54,7 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
+                    .addFilterAfter(checkRoleHaveAccessFilter(), FilterSecurityInterceptor.class)
                     .authorizeRequests()
                     .antMatchers(openEndpoints()).permitAll()
                     .anyRequest().authenticated()
@@ -72,6 +79,10 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     "/webjars/springfox-swagger-ui/**"
             };
         }
+    }
+
+    private Filter checkRoleHaveAccessFilter() {
+        return new CheckRoleHaveAccessFilter(BASE_PACKAGE);
     }
 
     private FirebaseService firebaseService;

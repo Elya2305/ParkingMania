@@ -1,9 +1,9 @@
 package com.outofmemory.dto;
 
-import com.outofmemory.entity.ComplainInfo;
+import com.outofmemory.entity.ComplaintStatus;
 import lombok.Data;
 
 @Data
 public class ComplaintStatusDto {
-    private ComplainInfo.Status status;
+    private ComplaintStatus status;
 }

@@ -2,6 +2,7 @@ package com.outofmemory.service.impl;
 
 import com.outofmemory.dto.ComplainDto;
 import com.outofmemory.entity.ComplainInfo;
+import com.outofmemory.entity.ComplaintStatus;
 import com.outofmemory.exception.ValidationException;
 import com.outofmemory.repository.ComplaintRepository;
 import com.outofmemory.service.ComplainService;
@@ -50,7 +51,7 @@ public class ComplainServiceImpl implements ComplainService {
     }
 
     @Override
-    public List<ComplainDto> allOfCurrent(ComplainInfo.Status status) {
+    public List<ComplainDto> allOfCurrent(ComplaintStatus status) {
         return complaintRepository.findAllByOwnerIdAndStatus(
                 AuthGateway.currentUserId(), status)
                 .stream().map(this::map)
@@ -58,8 +59,8 @@ public class ComplainServiceImpl implements ComplainService {
     }
 
     @Override
-    public List<ComplainDto> all(ComplainInfo.Status status) {
-        PermissionChecker.isAdmin();
+    public List<ComplainDto> allByStatus(ComplaintStatus status){
+        PermissionChecker.isAdmin(); //todo annotation
         return complaintRepository.findAllByStatus(status)
                 .stream().map(this::map)
                 .collect(Collectors.toList());
@@ -70,6 +71,7 @@ public class ComplainServiceImpl implements ComplainService {
                 .orElseThrow(() -> new NoSuchElementException("Can't find complain by id " + id));
     }
 
+    // todo add validation of autonumber
     // todo add photo
     private ComplainInfo map(ComplainDto resource, ComplainInfo destination) {
         destination.setId(resource.getId());
@@ -87,18 +89,19 @@ public class ComplainServiceImpl implements ComplainService {
         destination.setDescription(resource.getDescription());
         destination.setAddress(resource.getLocationAddress());
         destination.setLocation(resource.getLocation());
+        destination.setStatus(resource.getStatus());
         return destination;
     }
 
     private void validateUpdate(ComplainInfo entity) {
-        if (!entity.getStatus().equals(ComplainInfo.Status.NEW)) {
+        if (!entity.getStatus().equals(ComplaintStatus.NEW)) {
             throw new ValidationException("Sorry, you can't update complaint with status " + entity.getStatus());
         }
     }
 
     private void validateDelete(Integer id) {
-        ComplainInfo.Status status = complaintRepository.getStatusById(id);
-        if (isNull(status) || ComplainInfo.Status.NEW != status) {
+        ComplaintStatus status = complaintRepository.getStatusById(id);
+        if (isNull(status) || ComplaintStatus.NEW != status) {
             throw new ValidationException("Sorry, you can't delete complaint with status " + status);
         }
     }

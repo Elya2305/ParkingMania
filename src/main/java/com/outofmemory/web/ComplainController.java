@@ -1,8 +1,10 @@
 package com.outofmemory.web;
 
 import com.outofmemory.dto.ComplainDto;
-import com.outofmemory.dto.ComplaintStatusDto;
+import com.outofmemory.entity.ComplaintStatus;
+import com.outofmemory.entity.User;
 import com.outofmemory.service.ComplainService;
+import com.outofmemory.utils.access_check.RolesHaveAccess;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +37,15 @@ public class ComplainController {
     }
 
     @GetMapping("/by-user") // todo add pagination
-    public List<ComplainDto> allOfCurrentByStatus(@RequestBody ComplaintStatusDto request) {
+    public List<ComplainDto> allOfCurrentByStatus(@RequestParam ComplaintStatus status) {
         log.info("Request on getting complaints");
-        return complainService.allOfCurrent(request.getStatus());
+        return complainService.allOfCurrent(status);
     }
 
     @GetMapping
-    public List<ComplainDto> allByStatus(@RequestBody ComplaintStatusDto request) {
+    @RolesHaveAccess(restrict = {User.Role.ADMIN})
+    public List<ComplainDto> allByStatus(@RequestParam ComplaintStatus status) {
         log.info("Request on getting complaints");
-        return complainService.all(request.getStatus());
+        return complainService.allByStatus(status);
     }
 }

@@ -1,7 +1,7 @@
 package com.outofmemory.dto;
 
+import com.outofmemory.entity.ComplaintStatus;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ComplainDto {
@@ -11,4 +11,5 @@ public class ComplainDto {
     private String autoNumber;
     private String address;
     private LocationDto location;
+    private ComplaintStatus status;
 }

@@ -2,18 +2,15 @@ package com.outofmemory.web;
 
 import com.outofmemory.dto.FileDto;
 import com.outofmemory.dto.geo.GeoResponseDto;
-import com.outofmemory.exception.UploadFileException;
-import com.outofmemory.exception.ValidationException;
+import com.outofmemory.entity.User;
+import com.outofmemory.utils.access_check.RolesHaveAccess;
 import com.outofmemory.utils.client.GeocodingClient;
 import com.outofmemory.utils.client.UploadFileClient;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@RequestMapping("/test")
 @RestController
 @AllArgsConstructor
 public class TestController {
@@ -28,5 +25,11 @@ public class TestController {
     @GetMapping("/2")
     public GeoResponseDto test2() {
         return geocodingClient.decode(50.44994277906307, 30.522923429465568);
+    }
+
+    @GetMapping("/3")
+    @RolesHaveAccess(restrict = User.Role.ADMIN)
+    public boolean test3() {
+        return true;
     }
 }

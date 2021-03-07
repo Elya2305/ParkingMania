@@ -23,7 +23,7 @@ public class ComplainInfo extends AuditableEntity {
 
     private String autoNumber;
     @Enumerated(EnumType.STRING)
-    private Status status = Status.NEW;
+    private ComplaintStatus status = ComplaintStatus.NEW;
 
     @Column(columnDefinition = "TEXT")
     @Convert(converter = LocationConverter.class)
@@ -31,7 +31,4 @@ public class ComplainInfo extends AuditableEntity {
 
     private String locationAddress;
 
-    public enum Status {
-        NEW, CONFIRMED, REJECTED;
-    }
 }

@@ -1,9 +1,9 @@
 package com.outofmemory.repository;
 
 import com.outofmemory.entity.ComplainInfo;
+import com.outofmemory.entity.ComplaintStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +11,10 @@ import java.util.Optional;
 public interface ComplaintRepository extends JpaRepository<ComplainInfo, Integer> {
     Optional<ComplainInfo> findById(Integer id);
 
-    @Query("select ci.status from ComplainInfo ci where ci.id =:id")
-    ComplainInfo.Status getStatusById(@Param("id") Integer id);
+    List<ComplainInfo> findAllByOwnerIdAndStatus(String ownerId, ComplaintStatus status);
 
-    List<ComplainInfo> findAllByOwnerIdAndStatus(String ownerId, ComplainInfo.Status status);
+    List<ComplainInfo> findAllByStatus(ComplaintStatus status);
 
-    List<ComplainInfo> findAllByStatus(ComplainInfo.Status status);
+    @Query("select c.status from ComplainInfo c where c.id=:id")
+    ComplaintStatus getStatusById(Integer id);
 }
