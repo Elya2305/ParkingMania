@@ -6,6 +6,7 @@ import com.outofmemory.utils.access_check.RolesHaveAccess;
 import com.outofmemory.utils.security.AuthGateway;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -25,6 +26,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class CheckRoleHaveAccessFilter extends GenericFilterBean {
     private List<RoleAccess> config;
 
@@ -38,23 +40,19 @@ public class CheckRoleHaveAccessFilter extends GenericFilterBean {
     }
 
     private void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+        log.info("Start check role access filtering");
         String requestUrl = servletRequest.getRequestURI();
         String requestMethod = servletRequest.getMethod();
 
         doCheckAccess(requestUrl, requestMethod);
+        log.info("End check role access filtering");
         chain.doFilter(servletRequest, servletResponse);
     }
 
     // todo exception handler?
     private void doCheckAccess(String requestUrl, String requestMethod) {
-        config.stream().filter(o -> o.getRequestUrl().equals(requestUrl)
-                && o.getRequestMethod().equals(requestMethod))
-                .findAny().ifPresent(roleAccess -> {
-            User.Role current = AuthGateway.currentRole();
-            if (!roleAccess.getRolesHaveAccess().contains(current)) {
-                throw new UserHaveNoAccessToResourceException("User with role " + current + " doesn't have access to resource");
-            }
-        });
+        checkUserNotBlocked();
+        checkUserHaveAccess(requestUrl, requestMethod);
     }
 
     private void init(String... scanPackages) {
@@ -65,6 +63,24 @@ public class CheckRoleHaveAccessFilter extends GenericFilterBean {
         config = reflections.getMethodsAnnotatedWith(RolesHaveAccess.class)
                 .stream().map(this::toRoleAccess).collect(Collectors.toList());
 
+    }
+
+    private void checkUserHaveAccess(String requestUrl, String requestMethod) {
+        config.stream().filter(o -> o.getRequestUrl().equals(requestUrl)
+                && o.getRequestMethod().equals(requestMethod))
+                .findAny().ifPresent(roleAccess -> {
+            User.Role current = AuthGateway.currentRole();
+            if (!roleAccess.getRolesHaveAccess().contains(current)) {
+                throw new UserHaveNoAccessToResourceException("User with role " + current + " doesn't have access to resource");
+            }
+        });
+    }
+
+    private void checkUserNotBlocked() {
+        User.Status current = AuthGateway.currentStatus();
+        if (User.Status.BLOCKED == current) {
+            throw new UserHaveNoAccessToResourceException("User " + AuthGateway.currentUserId() + " is blocked");
+        }
     }
 
     private RoleAccess toRoleAccess(Method method) {

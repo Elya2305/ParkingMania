@@ -9,7 +9,6 @@ import com.outofmemory.service.ComplainService;
 import com.outofmemory.service.GeoService;
 import com.outofmemory.utils.client.UploadFileClient;
 import com.outofmemory.utils.security.AuthGateway;
-import com.outofmemory.utils.security.PermissionChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +59,6 @@ public class ComplainServiceImpl implements ComplainService {
 
     @Override
     public List<ComplainDto> allByStatus(ComplaintStatus status){
-        PermissionChecker.isAdmin(); //todo annotation
         return complaintRepository.findAllByStatus(status)
                 .stream().map(this::map)
                 .collect(Collectors.toList());

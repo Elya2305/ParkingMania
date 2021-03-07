@@ -1,4 +1,4 @@
-package com.outofmemory.config.firebase;
+package com.outofmemory.security.token;
 
 import com.google.firebase.auth.FirebaseToken;
 

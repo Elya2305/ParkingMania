@@ -1,8 +1,8 @@
 package com.outofmemory.config;
 
-import com.outofmemory.config.firebase.FirebaseAuthenticationProvider;
-import com.outofmemory.config.firebase.FirebaseFilter;
 import com.outofmemory.security.filter.CheckRoleHaveAccessFilter;
+import com.outofmemory.security.filter.FirebaseFilter;
+import com.outofmemory.security.provider.FirebaseAuthenticationProvider;
 import com.outofmemory.service.FirebaseService;
 import com.outofmemory.service.UserService;
 import com.outofmemory.service.impl.UserServiceImpl;
@@ -15,21 +15,18 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
-import javax.servlet.Filter;
-
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @Configuration
 public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
-
     private final static String BASE_PACKAGE = "com.outofmemory.web";
     private UserDetailsService userService;
 
@@ -62,6 +59,10 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     .addFilterAt(tokenAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         }
 
+        @Override
+        public void configure(WebSecurity webSecurity) {
+            webSecurity.ignoring().antMatchers(ignoringFilterChainEndpoints());
+        }
 
         private String[] openEndpoints() {
             return new String[]{
@@ -79,9 +80,16 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                     "/webjars/springfox-swagger-ui/**"
             };
         }
+
+        private String[] ignoringFilterChainEndpoints() {
+            return new String[] {
+                    "/auth/login",
+                    "/auth/register",
+            };
+        }
     }
 
-    private Filter checkRoleHaveAccessFilter() {
+    private CheckRoleHaveAccessFilter checkRoleHaveAccessFilter() {
         return new CheckRoleHaveAccessFilter(BASE_PACKAGE);
     }
 

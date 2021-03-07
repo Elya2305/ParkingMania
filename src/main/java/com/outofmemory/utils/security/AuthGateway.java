@@ -13,4 +13,9 @@ public class AuthGateway {
         return ((User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal()).getRole();
     }
+
+    public static User.Status currentStatus() {
+        return ((User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getStatus();
+    }
 }

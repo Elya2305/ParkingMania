@@ -1,6 +1,6 @@
 package com.outofmemory.service.impl;
 
-import com.outofmemory.config.firebase.FirebaseTokenHolder;
+import com.outofmemory.security.token.FirebaseTokenHolder;
 import com.outofmemory.dto.user.auth.*;
 import com.outofmemory.entity.User;
 import com.outofmemory.exception.auth.LoginException;

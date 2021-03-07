@@ -10,6 +10,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.HashMap;
 import java.util.Map;
 
+// todo add default environment
 @Slf4j
 @EnableSwagger2
 @EnableJpaAuditing(auditorAwareRef = SpringSecurityAuditorAware.NAME)

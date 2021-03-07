@@ -1,8 +1,10 @@
-package com.outofmemory.config.firebase;
+package com.outofmemory.security.filter;
 
 import com.cloudinary.utils.StringUtils;
+import com.outofmemory.security.token.FirebaseTokenHolder;
 import com.outofmemory.exception.auth.FirebaseTokenInvalidException;
 import com.outofmemory.service.FirebaseService;
+import com.outofmemory.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+// todo add bearer
 @Slf4j
 @AllArgsConstructor
 public class FirebaseFilter extends OncePerRequestFilter {
@@ -41,7 +44,7 @@ public class FirebaseFilter extends OncePerRequestFilter {
                 throw new SecurityException(e);
             }
         }
-        filterChain.doFilter(request, response);
         log.info("End firebase filtering");
+        filterChain.doFilter(request, response);
     }
 }

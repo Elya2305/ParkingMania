@@ -6,7 +6,6 @@ import com.outofmemory.repository.UserRepository;
 import com.outofmemory.service.UserMapper;
 import com.outofmemory.service.UserService;
 import com.outofmemory.utils.security.AuthGateway;
-import com.outofmemory.utils.security.PermissionChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,8 +31,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> all() {
-        PermissionChecker.isAdmin();
         return userRepository.findAll().stream()
                 .map(userMapper::map)
                 .collect(Collectors.toList());
@@ -44,6 +43,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.map(getFromDb(AuthGateway.currentUserId()));
     }
 
+    @Override
+    public boolean changeUserStatus(String localeId, User.Status status) {
+        userRepository.updateUserStatus(localeId, status);
+        return true;
+    }
 
     private User getFromDb(String localId) {
         return userRepository.findByLocalId(localId)

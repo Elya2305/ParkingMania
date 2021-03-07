@@ -1,4 +1,4 @@
-package com.outofmemory.config.firebase;
+package com.outofmemory.security.provider;
 
 import com.outofmemory.exception.auth.FirebaseUserNotExistsException;
 import com.outofmemory.service.impl.UserServiceImpl;

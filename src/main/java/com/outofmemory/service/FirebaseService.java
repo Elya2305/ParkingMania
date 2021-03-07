@@ -1,7 +1,7 @@
 package com.outofmemory.service;
 
 
-import com.outofmemory.config.firebase.FirebaseTokenHolder;
+import com.outofmemory.security.token.FirebaseTokenHolder;
 
 public interface FirebaseService {
 
