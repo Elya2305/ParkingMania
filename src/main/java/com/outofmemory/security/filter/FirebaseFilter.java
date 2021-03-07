@@ -1,8 +1,9 @@
 package com.outofmemory.security.filter;
 
 import com.cloudinary.utils.StringUtils;
-import com.outofmemory.security.token.FirebaseTokenHolder;
+import com.outofmemory.dto.user.UserDto;
 import com.outofmemory.exception.auth.FirebaseTokenInvalidException;
+import com.outofmemory.security.token.FirebaseTokenHolder;
 import com.outofmemory.service.FirebaseService;
 import com.outofmemory.service.UserService;
 import lombok.AllArgsConstructor;
@@ -19,12 +20,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 // todo add bearer
+// todo remove set context (in provider?)
 @Slf4j
 @AllArgsConstructor
 public class FirebaseFilter extends OncePerRequestFilter {
     private final static String HEADER_NAME = "X-Authorization-Firebase";
     private final static String TOKEN_URL = "/refresh-token";
     private final FirebaseService firebaseService;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -36,7 +39,8 @@ public class FirebaseFilter extends OncePerRequestFilter {
                 FirebaseTokenHolder holder = firebaseService.parseToken(xAuth);
                 String userName = holder.getUid();
 
-                Authentication auth = new UsernamePasswordAuthenticationToken(userName, holder);
+                UserDto user = userService.getByLocaleId(userName);
+                Authentication auth = new UsernamePasswordAuthenticationToken(user, holder);
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (FirebaseTokenInvalidException e) {

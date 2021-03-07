@@ -34,6 +34,7 @@ public class UserMapperImpl implements UserMapper {
         destination.setStatus(source.getStatus());
         destination.setLocalId(source.getLocalId());
         destination.setComplaintStatistic(map(source.getComplaints()));
+        destination.setRole(source.getRole());
         return destination;
     }
 

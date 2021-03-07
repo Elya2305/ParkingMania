@@ -15,4 +15,6 @@ public interface UserService extends UserDetailsService {
     UserDto getCurrent();
 
     boolean changeUserStatus(String localeId, User.Status status);
+
+    UserDto getByLocaleId(String localeId);
 }

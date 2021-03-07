@@ -5,6 +5,10 @@ import com.outofmemory.entity.ComplaintStatus;
 import com.outofmemory.entity.User;
 import com.outofmemory.service.ComplainService;
 import com.outofmemory.utils.access_check.RolesHaveAccess;
+import com.outofmemory.utils.api.ApiPageResponse;
+import com.outofmemory.utils.api.ApiResponse;
+import com.outofmemory.utils.api.PageDto;
+import com.outofmemory.utils.api.Responses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,33 +23,40 @@ public class ComplainController {
     private final ComplainService complainService;
 
     @PostMapping
-    public boolean create(@RequestBody ComplainDto dto) {
+    public ApiResponse<Boolean> create(@RequestBody ComplainDto dto) {
         log.info("Request on creating complaint - {}", dto);
-        return complainService.add(dto);
+        boolean result = complainService.add(dto);
+        return Responses.okResponse(result);
     }
 
     @PutMapping
-    public boolean update(@RequestBody ComplainDto dto) {
+    public ApiResponse<Boolean> update(@RequestBody ComplainDto dto) {
         log.info("Request on updating complaint - {}", dto);
-        return complainService.update(dto);
+        boolean result = complainService.update(dto);
+        return Responses.okResponse(result);
     }
 
     @DeleteMapping
-    public boolean delete(@RequestParam Integer id) {
+    public ApiResponse<Boolean> delete(@RequestParam Integer id) {
         log.info("Request on deleting complaint with id - {}", id);
-        return complainService.delete(id);
+        boolean result = complainService.delete(id);
+        return Responses.okResponse(result);
     }
 
-    @GetMapping("/by-user") // todo add pagination
-    public List<ComplainDto> allOfCurrentByStatus(@RequestParam ComplaintStatus status) {
+    @GetMapping("/by-user")
+    public ApiPageResponse<List<ComplainDto>> allOfCurrentByStatus(@RequestParam(required = false) ComplaintStatus status,
+                                                                   @RequestParam Integer page, Integer pageSize) {
         log.info("Request on getting complaints");
-        return complainService.allOfCurrent(status);
+        PageDto<List<ComplainDto>> pageResult = complainService.allOfCurrent(status, page, pageSize);
+        return Responses.okPageResponse(pageResult);
     }
 
     @GetMapping
     @RolesHaveAccess(restrict = {User.Role.ADMIN})
-    public List<ComplainDto> allByStatus(@RequestParam ComplaintStatus status) {
+    public ApiPageResponse<List<ComplainDto>> allByStatus(@RequestParam(required = false) ComplaintStatus status,
+                                         @RequestParam Integer page, Integer pageSize) {
         log.info("Request on getting complaints");
-        return complainService.allByStatus(status);
+        PageDto<List<ComplainDto>> pageResult = complainService.allByStatus(status, page, pageSize);
+        return Responses.okPageResponse(pageResult);
     }
 }

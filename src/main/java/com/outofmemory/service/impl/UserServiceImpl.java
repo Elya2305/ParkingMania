@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getCurrent() {
         return userMapper.map(getFromDb(AuthGateway.currentUserId()));
     }
@@ -47,6 +48,12 @@ public class UserServiceImpl implements UserService {
     public boolean changeUserStatus(String localeId, User.Status status) {
         userRepository.updateUserStatus(localeId, status);
         return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDto getByLocaleId(String localeId) {
+        return userMapper.map(getFromDb(localeId));
     }
 
     private User getFromDb(String localId) {

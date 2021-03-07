@@ -2,6 +2,7 @@ package com.outofmemory.web;
 
 import com.outofmemory.exception.CustomUserException;
 import com.outofmemory.exception.UploadFileException;
+import com.outofmemory.exception.UserHaveNoAccessToResourceException;
 import com.outofmemory.exception.ValidationException;
 import com.outofmemory.exception.auth.FirebaseTokenInvalidException;
 import com.outofmemory.exception.auth.LoginException;

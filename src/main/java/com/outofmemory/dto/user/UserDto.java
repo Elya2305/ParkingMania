@@ -12,4 +12,5 @@ public class UserDto {
     private String localId;
     private Map<ComplaintStatus, Long> complaintStatistic;
     private User.Status status;
+    private User.Role role;
 }

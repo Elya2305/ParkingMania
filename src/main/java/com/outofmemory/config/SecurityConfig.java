@@ -12,33 +12,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @Configuration
-public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
+public class SecurityConfig {
     private final static String BASE_PACKAGE = "com.outofmemory.web";
-    private UserDetailsService userService;
+    private UserService userService;
+    private HandlerExceptionResolver exceptionResolver;
 
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        return new FirebaseAuthenticationProvider(userService);
-    }
-
-    @Override
-    public void init(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
 
     @Configuration
     protected class ApplicationSecurity extends WebSecurityConfigurerAdapter {
@@ -64,6 +55,11 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
             webSecurity.ignoring().antMatchers(ignoringFilterChainEndpoints());
         }
 
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) {
+            auth.authenticationProvider(daoAuthenticationProvider());
+        }
+
         private String[] openEndpoints() {
             return new String[]{
                     "/alive",
@@ -82,7 +78,7 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
         }
 
         private String[] ignoringFilterChainEndpoints() {
-            return new String[] {
+            return new String[]{
                     "/auth/login",
                     "/auth/register",
             };
@@ -90,13 +86,13 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
     }
 
     private CheckRoleHaveAccessFilter checkRoleHaveAccessFilter() {
-        return new CheckRoleHaveAccessFilter(BASE_PACKAGE);
+        return new CheckRoleHaveAccessFilter(exceptionResolver, BASE_PACKAGE);
     }
 
     private FirebaseService firebaseService;
 
     private FirebaseFilter tokenAuthFilter() {
-        return new FirebaseFilter(firebaseService);
+        return new FirebaseFilter(firebaseService, userService);
     }
 
     @Autowired
@@ -108,6 +104,17 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
     @Qualifier(value = UserServiceImpl.NAME)
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    public void setExceptionResolver(HandlerExceptionResolver exceptionResolver) {
+        this.exceptionResolver = exceptionResolver;
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        return new FirebaseAuthenticationProvider(userService);
     }
 }
 

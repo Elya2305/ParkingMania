@@ -10,10 +10,4 @@ public class AliveController {
     public boolean alive() {
         return true;
     }
-
-
-    @GetMapping("/access")
-    public boolean haveAccess() {
-        return true;
-    }
 }

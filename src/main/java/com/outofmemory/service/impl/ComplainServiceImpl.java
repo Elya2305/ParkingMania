@@ -7,9 +7,13 @@ import com.outofmemory.exception.ValidationException;
 import com.outofmemory.repository.ComplaintRepository;
 import com.outofmemory.service.ComplainService;
 import com.outofmemory.service.GeoService;
+import com.outofmemory.utils.PagesUtility;
+import com.outofmemory.utils.api.PageDto;
 import com.outofmemory.utils.client.UploadFileClient;
 import com.outofmemory.utils.security.AuthGateway;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,28 +49,49 @@ public class ComplainServiceImpl implements ComplainService {
     @Override
     public boolean delete(Integer id) {
         validateDelete(id);
-        complaintRepository.delete(id);
+        complaintRepository.deleteById(id);
         return true;
     }
 
     @Override
-    public List<ComplainDto> allOfCurrent(ComplaintStatus status) {
-        return complaintRepository.findAllByOwnerIdAndStatus(
-                AuthGateway.currentUserId(), status)
-                .stream().map(this::map)
-                .collect(Collectors.toList());
+    public PageDto<List<ComplainDto>> allOfCurrent(ComplaintStatus status, int page, int pageSize) {
+        return complaintPage(status, page, pageSize, true);
+
     }
 
     @Override
-    public List<ComplainDto> allByStatus(ComplaintStatus status){
-        return complaintRepository.findAllByStatus(status)
-                .stream().map(this::map)
-                .collect(Collectors.toList());
+    public PageDto<List<ComplainDto>> allByStatus(ComplaintStatus status, int page, int pageSize) {
+        return complaintPage(status, page, pageSize, false);
+    }
+
+    private PageDto<List<ComplainDto>> complaintPage(ComplaintStatus status, int page, int pageSize, boolean current) {
+        Pageable pageable = getPageableSortedByDate(page, pageSize);
+        Page<ComplainInfo> result = isNull(status)
+                ? getPageableOrderedByDate(pageable, current)
+                : getPageableByStatusOrderedByDate(status, pageable, current);
+
+        return PageDto.of(map(result.getContent()), result.getTotalPages(), page);
     }
 
     private ComplainInfo getFromDb(Integer id) {
         return complaintRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Can't find complain by id " + id));
+    }
+
+    private Page<ComplainInfo> getPageableByStatusOrderedByDate(ComplaintStatus status, Pageable pageable, boolean current) {
+        return current ? complaintRepository.findAllByOwnerIdAndStatus(
+                AuthGateway.currentUserId(), status, pageable)
+                : complaintRepository.findAllByStatus(status, pageable);
+    }
+
+    private Page<ComplainInfo> getPageableOrderedByDate(Pageable pageable, boolean current) {
+        return current ? complaintRepository.findAllByOwnerId(
+                AuthGateway.currentUserId(), pageable)
+                : complaintRepository.findAll(pageable);
+    }
+
+    private Pageable getPageableSortedByDate(int page, int pageSize) {
+        return PagesUtility.createSortPageRequest(page, pageSize, PagesUtility.SortOrder.DESC, "dateCreated");
     }
 
     // todo add validation of autonumber
@@ -78,6 +103,10 @@ public class ComplainServiceImpl implements ComplainService {
         destination.setLocation(resource.getLocation());
         destination.setLocationAddress(geoService.address(resource.getLocation()));
         return destination;
+    }
+
+    private List<ComplainDto> map(List<ComplainInfo> source) {
+        return source.stream().map(this::map).collect(Collectors.toList());
     }
 
     private ComplainDto map(ComplainInfo resource) {

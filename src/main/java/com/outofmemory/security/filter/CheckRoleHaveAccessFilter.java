@@ -13,6 +13,7 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ConfigurationBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -29,27 +30,34 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CheckRoleHaveAccessFilter extends GenericFilterBean {
     private List<RoleAccess> config;
+    private final HandlerExceptionResolver exceptionResolver;
 
-    public CheckRoleHaveAccessFilter(String... scanPackage) {
+    public CheckRoleHaveAccessFilter(HandlerExceptionResolver exceptionResolver, String... scanPackage) {
+        this.exceptionResolver = exceptionResolver;
         init(scanPackage);
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        this.doFilter((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, chain);
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) {
+        try {
+            this.doFilter((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, chain);
+        } catch (Exception exc) {
+            exceptionResolver.resolveException((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, null, exc);
+        }
     }
 
     private void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        log.info("Start check role access filtering");
         String requestUrl = servletRequest.getRequestURI();
         String requestMethod = servletRequest.getMethod();
 
+        if (requestUrl.equals("/error")) {
+            chain.doFilter(servletRequest, servletResponse);
+        }
+
         doCheckAccess(requestUrl, requestMethod);
-        log.info("End check role access filtering");
         chain.doFilter(servletRequest, servletResponse);
     }
 
-    // todo exception handler?
     private void doCheckAccess(String requestUrl, String requestMethod) {
         checkUserNotBlocked();
         checkUserHaveAccess(requestUrl, requestMethod);
