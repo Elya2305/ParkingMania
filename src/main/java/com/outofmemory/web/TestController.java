@@ -9,7 +9,7 @@ import com.outofmemory.utils.client.UploadFileClient;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+// todo remove
 @RequestMapping("/test")
 @RestController
 @AllArgsConstructor

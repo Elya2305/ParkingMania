@@ -10,8 +10,18 @@ import java.util.List;
 @Getter
 public enum MenuItem {
     PROFILE("Profile"),
-    HISTORY_COMPLAINTS("History of complaints"),
-    NEW_COMPLAINTS("List of complaints"),
+    HISTORY_COMPLAINTS("History of complaints") {
+        @Override
+        public List<User.Role> roleAccess() {
+            return Collections.singletonList(User.Role.USER);
+        }
+    },
+    NEW_COMPLAINTS("List of complaints") {
+        @Override
+        public List<User.Role> roleAccess() {
+            return Collections.singletonList(User.Role.USER);
+        }
+    },
     LIST_USERS("List of user") {
         @Override
         public List<User.Role> roleAccess() {
@@ -27,5 +37,5 @@ public enum MenuItem {
 
     public List<User.Role> roleAccess() {
         return Arrays.asList(User.Role.values());
-    };
+    }
 }

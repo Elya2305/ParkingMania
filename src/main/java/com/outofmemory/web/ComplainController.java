@@ -1,6 +1,7 @@
 package com.outofmemory.web;
 
-import com.outofmemory.dto.ComplainDto;
+import com.outofmemory.dto.complaint.ComplainDto;
+import com.outofmemory.dto.complaint.ComplaintIdStatusDto;
 import com.outofmemory.entity.ComplaintStatus;
 import com.outofmemory.entity.User;
 import com.outofmemory.service.ComplainService;
@@ -13,8 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+// todo add response logging
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -44,19 +44,27 @@ public class ComplainController {
     }
 
     @GetMapping("/by-user")
-    public ApiPageResponse<List<ComplainDto>> allOfCurrentByStatus(@RequestParam(required = false) ComplaintStatus status,
-                                                                   @RequestParam Integer page, Integer pageSize) {
+    public ApiPageResponse<ComplainDto> allOfCurrentByStatus(@RequestParam(required = false) ComplaintStatus status,
+                                                             @RequestParam Integer page, Integer pageSize) {
         log.info("Request on getting complaints");
-        PageDto<List<ComplainDto>> pageResult = complainService.allOfCurrent(status, page, pageSize);
+        PageDto<ComplainDto> pageResult = complainService.allOfCurrent(status, page, pageSize);
         return Responses.okPageResponse(pageResult);
     }
 
     @GetMapping
     @RolesHaveAccess(restrict = {User.Role.ADMIN})
-    public ApiPageResponse<List<ComplainDto>> allByStatus(@RequestParam(required = false) ComplaintStatus status,
-                                         @RequestParam Integer page, Integer pageSize) {
+    public ApiPageResponse<ComplainDto> allByStatus(@RequestParam(required = false) ComplaintStatus status,
+                                                    @RequestParam Integer page, Integer pageSize) {
         log.info("Request on getting complaints");
-        PageDto<List<ComplainDto>> pageResult = complainService.allByStatus(status, page, pageSize);
+        PageDto<ComplainDto> pageResult = complainService.allByStatus(status, page, pageSize);
         return Responses.okPageResponse(pageResult);
+    }
+
+    @PostMapping("/change-status")
+    @RolesHaveAccess(restrict = {User.Role.ADMIN})
+    public ApiResponse<Boolean> changeStatus(@RequestBody ComplaintIdStatusDto request) {
+        log.info("Request on changing status of complaint " + request);
+        boolean result = complainService.changeStatus(request);
+        return Responses.okResponse(result);
     }
 }

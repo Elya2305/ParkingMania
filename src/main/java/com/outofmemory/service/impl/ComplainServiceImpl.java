@@ -1,6 +1,7 @@
 package com.outofmemory.service.impl;
 
-import com.outofmemory.dto.ComplainDto;
+import com.outofmemory.dto.complaint.ComplainDto;
+import com.outofmemory.dto.complaint.ComplaintIdStatusDto;
 import com.outofmemory.entity.ComplainInfo;
 import com.outofmemory.entity.ComplaintStatus;
 import com.outofmemory.exception.ValidationException;
@@ -54,17 +55,23 @@ public class ComplainServiceImpl implements ComplainService {
     }
 
     @Override
-    public PageDto<List<ComplainDto>> allOfCurrent(ComplaintStatus status, int page, int pageSize) {
+    public boolean changeStatus(ComplaintIdStatusDto dto) {
+        complaintRepository.updateStatus(dto.getStatus(), dto.getId());
+        return true;
+    }
+
+    @Override
+    public PageDto<ComplainDto> allOfCurrent(ComplaintStatus status, int page, int pageSize) {
         return complaintPage(status, page, pageSize, true);
 
     }
 
     @Override
-    public PageDto<List<ComplainDto>> allByStatus(ComplaintStatus status, int page, int pageSize) {
+    public PageDto<ComplainDto> allByStatus(ComplaintStatus status, int page, int pageSize) {
         return complaintPage(status, page, pageSize, false);
     }
 
-    private PageDto<List<ComplainDto>> complaintPage(ComplaintStatus status, int page, int pageSize, boolean current) {
+    private PageDto<ComplainDto> complaintPage(ComplaintStatus status, int page, int pageSize, boolean current) {
         Pageable pageable = getPageableSortedByDate(page, pageSize);
         Page<ComplainInfo> result = isNull(status)
                 ? getPageableOrderedByDate(pageable, current)

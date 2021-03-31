@@ -14,6 +14,6 @@ public class ApiResponse<T> {
 
 
     public enum Status {
-        OK, ERROR;
+        OK, ERROR, TOKEN_EXPIRED, AUTH_ERROR;
     }
 }

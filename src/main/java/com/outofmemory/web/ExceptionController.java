@@ -1,12 +1,10 @@
 package com.outofmemory.web;
 
 import com.outofmemory.exception.CustomUserException;
-import com.outofmemory.exception.UploadFileException;
-import com.outofmemory.exception.UserHaveNoAccessToResourceException;
-import com.outofmemory.exception.ValidationException;
-import com.outofmemory.exception.auth.FirebaseTokenInvalidException;
-import com.outofmemory.exception.auth.LoginException;
-import com.outofmemory.exception.auth.RegistrationException;
+import com.outofmemory.exception.auth.RefreshTokenException;
+import com.outofmemory.exception.auth.TokenExpiredException;
+import com.outofmemory.utils.api.ApiResponse;
+import com.outofmemory.utils.api.Responses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,14 +16,26 @@ public class ExceptionController {
 
 
     @ExceptionHandler(Exception.class)
-    public String handleCustomException(Exception ex) {
+    public ApiResponse<String> handleCustomException(Exception ex) {
         log.error("Was caught exception!", ex);
-        return SOMETHING_WENT_WRONG;
+        return Responses.errorResponse(SOMETHING_WENT_WRONG);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ApiResponse<String> tokenExpiredException(TokenExpiredException ex) {
+        log.error("Was caught exception!", ex);
+        return Responses.tokenExpiredResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(RefreshTokenException.class)
+    public ApiResponse<String> refreshTokenException(RefreshTokenException ex) {
+        log.error("Was caught exception!", ex);
+        return Responses.authErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(CustomUserException.class)
-    public String handleUploadFileException(CustomUserException ex) {
+    public ApiResponse<String> handleUploadFileException(CustomUserException ex) {
         log.error("Was caught exception!", ex);
-        return ex.getMessage();
+        return Responses.errorResponse(ex.getMessage());
     }
 }

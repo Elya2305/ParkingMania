@@ -1,5 +1,6 @@
-package com.outofmemory.dto;
+package com.outofmemory.dto.complaint;
 
+import com.outofmemory.dto.LocationDto;
 import com.outofmemory.entity.ComplaintStatus;
 import lombok.Data;
 

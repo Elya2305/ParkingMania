@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,8 +21,8 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-@EnableWebSecurity(debug = true)
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableWebSecurity(debug = false)
+//@EnableGlobalMethodSecurity(securedEnabled = true)
 @Configuration
 public class SecurityConfig {
     private final static String BASE_PACKAGE = "com.outofmemory.web";
@@ -92,7 +91,7 @@ public class SecurityConfig {
     private FirebaseService firebaseService;
 
     private FirebaseFilter tokenAuthFilter() {
-        return new FirebaseFilter(firebaseService, userService);
+        return new FirebaseFilter(firebaseService, userService, exceptionResolver);
     }
 
     @Autowired
